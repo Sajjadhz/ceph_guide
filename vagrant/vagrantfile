@@ -3,7 +3,7 @@ Vagrant.configure("2") do |config|
   base_ip = "192.168.56."
   ip_addresses = { vm1: "#{base_ip}7", vm2: "#{base_ip}8", vm3: "#{base_ip}9" }
   ssh_username = "root"
-  ssh_password = "admin"
+  ssh_password = "vagrant"
   dashboard_username = "admin"
   dashboard_password = "admin"
 
@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
       # SSH Configuration
       vm_config.ssh.username = ssh_username
       vm_config.ssh.password = ssh_password
-      vm_config.ssh.insert_key = false
+      vm_config.ssh.insert_key = true
       vm_config.ssh.keys_only = false
 
       # Provider Configuration
@@ -130,9 +130,9 @@ Vagrant.configure("2") do |config|
 
       # Set dashboard admin username and password
       sudo ./cephadm shell --  ceph dashboard create-self-signed-cert
-      echo -n "#{dashboard_password}" > /tmp/dashboard-password
-      sudo ./cephadm shell -- ceph dashboard set-login-credentials #{dashboard_username} -i /tmp/dashboard-password
-      sudo rm /tmp/dashboard-password
+      echo your admin username: '#{dashboard_username}'
+      echo your admin password: '#{dashboard_password}'      
+      echo '#{dashboard_password}' | sudo ./cephadm shell -- ceph dashboard ac-user-set-password --force-password '#{dashboard_username}' -i -
 
       # Verify the Ceph cluster status
       sudo ./cephadm shell -- sudo ceph mgr services
